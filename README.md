@@ -1,6 +1,8 @@
-# @bhplugin/vue3-datatable
+# @luisgb2212/table-customizable
 
 ## Example
+
+Editado de @bhplugin/vue3-datatable
 
 [Document & Demos](https://vue3-datatable-document.vercel.app)
 

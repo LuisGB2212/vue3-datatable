@@ -10,7 +10,7 @@
             <button type="button" class="btn mb-4 bh-p-2" @click="datatable.reset()">Reset</button> <br />
         </div>
 
-        <vue3-datatable
+        <TableCustomized
             ref="datatable"
             :loading="loading"
             :rows="rows"
@@ -28,12 +28,12 @@
             :columnFilter="false"
             @change="changeServer"
         >
-        </vue3-datatable>
+        </TableCustomized>
     </div>
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-import Vue3Datatable from './components/custom-table.vue';
+import TableCustomized from './components/custom-table.vue';
 import '../dist/style.css';
 
 onMounted(() => {

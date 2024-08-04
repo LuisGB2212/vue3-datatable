@@ -1,6 +1,6 @@
 {
-    "name": "@bhplugin/vue3-datatable",
-    "version": "1.1.4",
+    "name": "@luisgb2212/table-customizable",
+    "version": "1.0.0",
     "description": "Vue3 Datatable - fully customizable & easy to use datatable library",
     "private": false,
     "type": "module",
@@ -13,23 +13,23 @@
     "exports": {
         ".": {
             "import": "./dist/vue3-datatable.js",
-            "require": "./dist/vue3-datatable.umd.js"
+            "require": "./dist/vue3-datatable.umd.js",
+            "types": "./dist/main.d.ts"
         },
         "./dist/style.css": "./dist/style.css"
     },
     "author": {
-        "name": "Bhavesh Patel",
-        "email": "bhavesh.patel200@gmail.com"
+        "name": "Luis Eduardo Gonzalez Balam",
+        "email": "luis.gb22212@gmail.com"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/bhaveshpatel200/vue3-datatable.git"
+        "url": "git+https://github.com/LuisGB2212/vue3-datatable.git"
     },
     "bugs": {
-        "url": "https://github.com/bhaveshpatel200/vue3-datatable/issues"
+        "url": "https://github.com/LuisGB2212/vue3-datatable/issues"
     },
-    "homepage": "https://github.com/bhaveshpatel200/vue3-datatable#readme",
-    "funding": "https://github.com/sponsors/bhaveshpatel200",
+    "homepage": "https://github.com/LuisGB2212/vue3-datatable#readme",
     "keywords": [
         "vue3",
         "vue",
