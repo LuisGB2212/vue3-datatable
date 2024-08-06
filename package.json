@@ -1,6 +1,6 @@
 {
     "name": "@luisgb2212/table-customizable",
-    "version": "1.0.3",
+    "version": "1.0.2",
     "description": "Vue3 Datatable - fully customizable & easy to use datatable library",
     "private": false,
     "type": "module",
