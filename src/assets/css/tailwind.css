@@ -14,7 +14,7 @@
         @apply bh-overflow-auto bh-w-full bh-relative bh-rounded;
     }
     .bh-table-responsive table {
-        @apply bh-w-full bh-max-w-full !bh-border-collapse;
+        @apply bh-w-full bh-max-w-full;
     }
     .bh-table-responsive table thead tr,
     .bh-table-responsive table tfoot tr {
