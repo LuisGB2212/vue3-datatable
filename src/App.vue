@@ -9,7 +9,7 @@
             />
             <button type="button" class="btn mb-4 bh-p-2" @click="datatable.reset()">Reset</button> <br />
         </div>
-
+        <a href="https://google.com">Link</a>
         <TableCustomized
             ref="datatable"
             :loading="loading"
@@ -28,6 +28,9 @@
             :columnFilter="false"
             @change="changeServer"
         >
+            <template #id="data">
+                <a target="_blank" rel="noopener noreferrer" href="https://google.com.mx">Hola</a>
+            </template>
         </TableCustomized>
     </div>
 </template>

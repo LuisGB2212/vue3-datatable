@@ -22,7 +22,7 @@
                             v-for="(item, i) in filterItems"
                             :key="item[uniqueKey] ? item[uniqueKey] : i"
                             :class="[typeof props.rowClass === 'function' ? rowClass(item) : props.rowClass, props.selectRowOnClick ? 'bh-cursor-pointer' : '']"
-                            @click.prevent="rowClick(item, i)"
+                            @click="rowClick(item, i)"
                         >
                             <td
                                 v-if="props.hasCheckbox"
