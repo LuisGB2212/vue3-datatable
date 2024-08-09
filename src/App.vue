@@ -9,7 +9,6 @@
             />
             <button type="button" class="btn mb-4 bh-p-2" @click="datatable.reset()">Reset</button> <br />
         </div>
-        <a href="https://google.com">Link</a>
         <TableCustomized
             ref="datatable"
             :loading="loading"
@@ -25,7 +24,7 @@
             :sortDirection="params.sort_direction"
             :search="params.search"
             :hasCheckbox="true"
-            :columnFilter="false"
+            :columnFilter="true"
             @change="changeServer"
         >
             <template #id="data">
@@ -50,7 +49,7 @@ const rows: any = ref(null);
 const cols =
     ref([
         { field: 'id', title: 'ID', isUnique: true, filter: false },
-        { field: 'firstName', title: 'First Name' },
+        { field: 'firstName', title: 'First Name',  type: 'string', options: ["Cannon", "Hannah"] },
         { field: 'lastName', title: 'Last Name' },
         { field: 'email', title: 'Email' },
         { field: 'age', title: 'Age', type: 'number' },
