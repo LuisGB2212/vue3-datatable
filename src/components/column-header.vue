@@ -88,7 +88,7 @@
     </tr>
 </template>
 <script setup lang="ts">
-import { watch, ref, onMounted} from 'vue';
+import { watch, ref} from 'vue';
 import columnFilter from './column-filter.vue';
 import iconCheck from './icon-check.vue';
 import iconDash from './icon-dash.vue';
@@ -105,17 +105,6 @@ const checkboxChange = () => {
         selectedAll.value.checked = props.checkAll;
     }
 };
-
-const changeDataSelect = () => {
-    props.all.columns.forEach(column => {
-        if(column.select) {
-            console.log(column.field);
-            column.options = [...new Set(props.all.rows?.map(item => item[column.field]))];
-        }
-    });
-}
-
-watch(() => props.all.rows, changeDataSelect);
 
 watch(() => props.checkAll, checkboxChange);
 </script>
