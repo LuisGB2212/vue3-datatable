@@ -64,6 +64,8 @@
         "tailwind:build": "npx tailwindcss -i ./src/assets/css/tailwind.css -o ./dist/style.css --minify"
     },
     "dependencies": {
+        "dayjs": "^1.11.13",
+        "litepicker": "^2.0.12",
         "vue": "^3.2.37"
     },
     "devDependencies": {

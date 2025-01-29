@@ -56,14 +56,46 @@
 
                 <template v-if="props.all.columnFilter && !props.isFooter">
                     <div v-if="col.filter" class="bh-filter bh-relative">
-                        <input v-if="col.type === 'string' && !col.options" v-model.trim="col.value" type="text" class="bh-form-control" @keyup="emit('filterChange')" />
-                        <input v-if="col.type === 'number'" v-model.number.trim="col.value" type="number" class="bh-form-control" @keyup="emit('filterChange')" />
-                        <input v-else-if="col.type === 'date'" v-model="col.value" type="date" class="bh-form-control" @change="emit('filterChange')" />
-                        <select v-else-if="col.type === 'bool'" v-model="col.value" class="bh-form-control" @change="emit('filterChange')">
+                        <!-- Input de busqueda string -->
+                        <input v-if="col.type === 'string' && !col.options"
+                            v-model.trim="col.value" 
+                            type="text" 
+                            class="bh-form-control" autocomplete="off"
+                            @keyup="emit('filterChange')" />
+                        
+                        <!-- Input de busqueda numerico -->
+                        <input v-if="col.type === 'number'" v-model.number.trim="col.value"
+                            type="number" 
+                            class="bh-form-control" autocomplete="off"
+                            @keyup="emit('filterChange')" />
+
+                        <!-- Input de busqueda de fecha -->
+                        <input v-if="col.type === 'date' && !col.range"
+                            :ref="col.field"
+                            :id="col.field"
+                            v-model="col.value" type="text" autocomplete="off" placeholder="Fecha"
+                            class="bh-form-control" />
+
+                        <!-- Rango de fechas en un solo input -->
+                        <input v-if="col.type === 'date' && (typeof col.range == 'boolean' && col.range == true)"
+                            :ref="col.field"
+                            :id="col.field"
+                            v-model="col.value"
+                            type="text"
+                            class="bh-form-control"
+                            placeholder="Selecciona rango de fechas"
+                            autocomplete="off"
+                        />
+                        <!-- <input v-else-if="col.type === 'date'" v-model="col.value" type="date" class="bh-form-control" @change="emit('filterChange')" /> -->
+                        
+                        <!-- Input de busqueda de selector de true o false -->
+                        <select v-if="col.type === 'bool'" v-model="col.value" class="bh-form-control" @change="emit('filterChange')">
                             <option :value="undefined">All</option>
                             <option :value="true">True</option>
                             <option :value="false">False</option>
                         </select>
+                        
+                        <!-- Input de busqueda en selector -->
                         <select class="bh-form-control" v-if="col.type === 'string' && col.options" v-model="col.value" @change="emit('filterChange')">
                             <option :value="undefined">Todos</option>
                             <option v-for="opt in col.options" :key="'opt'+opt" :value="opt">{{ opt }}</option>
@@ -88,11 +120,17 @@
     </tr>
 </template>
 <script setup lang="ts">
-import { watch, ref} from 'vue';
+import { watch, ref, onMounted, nextTick } from 'vue';
+import Litepicker from 'litepicker';
 import columnFilter from './column-filter.vue';
 import iconCheck from './icon-check.vue';
 import iconDash from './icon-dash.vue';
 import iconFilter from './icon-filter.vue';
+import dayjs from "dayjs";
+import "dayjs/locale/es";
+
+dayjs.locale("es");
+
 
 const selectedAll: any = ref(null);
 
@@ -107,4 +145,91 @@ const checkboxChange = () => {
 };
 
 watch(() => props.checkAll, checkboxChange);
+
+const initializeDatePicker = (column: any) => {
+    nextTick(() => {
+        const input = document.getElementById(column.field);
+        if (input) {
+            new Litepicker({
+                element: input,
+                singleMode: true,
+                tooltipNumber: (totalDays) => {
+                    return totalDays - 1;
+                },
+                setup: (picker) => {
+                    picker.on('selected', (startDate, endDate) => {
+                        let date = dayjs(startDate.dateInstance).format(getFormatDate(column));
+                        date += endDate !== undefined && endDate !== null ? " - " + dayjs(endDate.dateInstance).format(getFormatDate(column)) : "";
+                        column.value = date;
+                        emit('filterChange');
+                    });
+                    picker.on('clear:selection', () => {
+                        column.value = null;
+                        emit('filterChange');
+                    });
+                },
+                resetButton: () => {
+                    let btn = document.createElement('button');
+                    btn.innerText = 'Limpiar';
+                    btn.addEventListener('click', (evt) => {
+                        evt.preventDefault();
+                    });
+
+                    return btn;
+                },
+            });
+        }
+    });
+}
+
+// Inicializa el picker para el rango de fechas en un solo input
+const initializeRangePicker = (column: any) => {
+    nextTick(() => {
+        const input = document.getElementById(column.field);
+
+        if (input) {
+            new Litepicker({
+                element: input,
+                singleMode: false,
+                tooltipNumber: (totalDays) => totalDays - 1,
+                setup: (picker) => {
+                    picker.on('selected', (startDate, endDate) => {
+                        let date = dayjs(startDate.dateInstance).format(getFormatDate(column));
+                        date += endDate !== undefined && endDate !== null ? " - " + dayjs(endDate.dateInstance).format(getFormatDate(column)) : "";
+                        column.value = date;
+                        emit('filterChange');
+                    });
+                    picker.on('clear:selection', () => {
+                        column.value = null;
+                        emit('filterChange');
+                    });
+                },
+                resetButton: () => {
+                    let btn = document.createElement('button');
+                    btn.innerText = 'Limpiar';
+                    btn.addEventListener('click', (evt) => {
+                        evt.preventDefault();
+                    });
+                    return btn;
+                },
+            });
+        }
+    });
+};
+
+// Ejecuta la inicialización del range picker cuando la columna es de tipo 'date' y tiene un rango
+onMounted(() => {
+    props.all.columns.forEach(col => {
+        if (col.type === 'date' && (typeof col.range == "boolean" && col.range == true)) {
+            initializeRangePicker(col);
+        } else if (col.type === 'date') {
+            initializeDatePicker(col);
+        }
+    });
+});
+
+const getFormatDate = (column: any):string => {
+    return column.formatDate ?? 'YYYY-MM-DD';
+}
+
 </script>

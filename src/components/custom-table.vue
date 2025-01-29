@@ -21,7 +21,11 @@
                         <tr
                             v-for="(item, i) in filterItems"
                             :key="item[uniqueKey] ? item[uniqueKey] : i"
-                            :class="[typeof props.rowClass === 'function' ? rowClass(item) : props.rowClass, props.selectRowOnClick ? 'bh-cursor-pointer' : '']"
+                            :class="[
+                                typeof props.rowClass === 'function' ? rowClass(item) : props.rowClass, 
+                                props.selectRowOnClick ? 'bh-cursor-pointer' : '',
+                                applyClassVerify(item)
+                            ]"
                             @click="rowClick(item, i)"
                         >
                             <td
@@ -196,6 +200,8 @@ export interface colDef {
     cellRenderer?: [Function, string];
     headerClass?: string;
     cellClass?: string;
+    range?: boolean;
+    formatDate?: string;
 }
 
 interface Props {
@@ -235,6 +241,8 @@ interface Props {
     stickyFirstColumn?: boolean;
     cloneHeaderInFooter?: boolean;
     selectRowOnClick?: boolean;
+    fieldVerify?: string;
+    virifyClass?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -402,6 +410,8 @@ const filteredRows = () => {
 
     if (!props.isServerMode) {
         props.columns?.forEach((d) => {
+            console.log(d);
+            
             if (d.filter && ((d.value !== undefined && d.value !== null && d.value !== '') || d.condition === 'is_null' || d.condition == 'is_not_null')) {
                 // string filters
                 if (d.type === 'string') {
@@ -473,14 +483,17 @@ const filteredRows = () => {
                     }
                 }
                 // date filters
-                else if (d.type === 'date') {
+                else if (d.type === 'date' && !d.range) {
                     if (d.value && !d.condition) {
                         d.condition = 'equal';
                     }
 
                     if (d.condition === 'equal') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && dateFormat(cellValue(item, d.field)) === d.value;
+                            console.log("cellValue: ",cellValue(item, d.field));
+                            console.log("Valor: ", d.value);
+                            
+                            return cellValue(item, d.field) && cellValue(item, d.field) === d.value;
                         });
                     } else if (d.condition === 'not_equal') {
                         rows = rows.filter((item) => {
@@ -539,15 +552,23 @@ const filteredRows = () => {
         }
 
         // sort rows
-        var collator = new Intl.Collator(undefined, {
+        var collator = new Intl.Collator('en', {
             numeric: props.columns.find((col) => col.field == currentSortColumn.value)?.type === 'number',
             sensitivity: 'base',
         });
+
         const sortOrder = currentSortDirection.value === 'desc' ? -1 : 1;
 
         rows.sort((a: any, b: any): number => {
             const valA = currentSortColumn.value?.split('.').reduce((obj: any, key: string) => obj?.[key], a);
             const valB = currentSortColumn.value?.split('.').reduce((obj: any, key: string) => obj?.[key], b);
+
+            // Si estamos ordenando por el campo "code", hacemos un ordenamiento especial.
+            if (currentSortColumn.value === 'code') {
+                const numericA = valA.replace(/[^\d]/g, ''); // Extraer números de la cadena.
+                const numericB = valB.replace(/[^\d]/g, '');
+                return (parseInt(numericA) - parseInt(numericB)) * sortOrder;
+            }
 
             return collator.compare(valA, valB) * sortOrder;
         });
@@ -557,7 +578,7 @@ const filteredRows = () => {
 };
 
 const filterRows = () => {
-    let result = [];
+    let result: any = [];
     let rows = filteredRows();
 
     if (props.isServerMode) {
@@ -842,13 +863,16 @@ const reset = () => {
         filterRows();
     }
 };
+
 const getSelectedRows = () => {
     const rows = filterItems.value.filter((d, i) => selected.value.includes(uniqueKey.value ? d[uniqueKey.value as never] : i));
     return rows;
 };
+
 const getColumnFilters = () => {
     return props.columns;
 };
+
 const clearSelectedRows = () => {
     selected.value = [];
 };
@@ -872,4 +896,11 @@ const isRowSelected = (index: number) => {
     }
     return false;
 };
+
+const applyClassVerify = (item: any): string => {
+    if(props.fieldVerify && item[props.fieldVerify]) {
+        return props.virifyClass ?? "text-danger";
+    }
+    return "";
+}
 </script>
