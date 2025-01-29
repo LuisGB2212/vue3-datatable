@@ -410,8 +410,6 @@ const filteredRows = () => {
 
     if (!props.isServerMode) {
         props.columns?.forEach((d) => {
-            console.log(d);
-            
             if (d.filter && ((d.value !== undefined && d.value !== null && d.value !== '') || d.condition === 'is_null' || d.condition == 'is_not_null')) {
                 // string filters
                 if (d.type === 'string') {
@@ -490,14 +488,11 @@ const filteredRows = () => {
 
                     if (d.condition === 'equal') {
                         rows = rows.filter((item) => {
-                            console.log("cellValue: ",cellValue(item, d.field));
-                            console.log("Valor: ", d.value);
-                            
                             return cellValue(item, d.field) && cellValue(item, d.field) === d.value;
                         });
                     } else if (d.condition === 'not_equal') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && dateFormat(cellValue(item, d.field)) !== d.value;
+                            return cellValue(item, d.field) && cellValue(item, d.field) !== d.value;
                         });
                     } else if (d.condition === 'greater_than') {
                         rows = rows.filter((item) => {
