@@ -128,7 +128,6 @@ import iconDash from './icon-dash.vue';
 import iconFilter from './icon-filter.vue';
 import dayjs from "dayjs";
 import "dayjs/locale/es";
-import "litepicker/dist/litepicker.css";
 
 dayjs.locale("es");
 
