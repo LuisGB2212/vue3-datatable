@@ -8,11 +8,11 @@
         "dist"
     ],
     "main": "./dist/vue3-datatable.umd.js",
-    "module": "./dist/vue3-datatable.es.js",
+    "module": "./dist/vue3-datatable.js",
     "types": "./dist/main.d.ts",
     "exports": {
         ".": {
-            "import": "./dist/vue3-datatable.es.js",
+            "import": "./dist/vue3-datatable.js",
             "require": "./dist/vue3-datatable.umd.js",
             "types": "./dist/main.d.ts"
         },
