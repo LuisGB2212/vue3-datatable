@@ -264,7 +264,7 @@ const props = withDefaults(defineProps<Props>(), {
     cellRenderer: null,
     sortable: false,
     sortColumn: 'id',
-    sortDirection: 'asc',
+    sortDirection: 'desc',
     columnFilter: false,
     columnFilterLang: null,
     pagination: true,
@@ -303,9 +303,9 @@ const currentPage = ref(props.page);
 const currentPageSize = ref(props.pagination ? props.pageSize : props.rows?.length);
 const oldPageSize = props.pageSize;
 const currentSortColumn = ref(props.sortColumn);
-const oldSortColumn = props.sortColumn;
+const oldSortColumn = props.sortColumn ?? 'id';
 const currentSortDirection = ref(props.sortDirection);
-const oldSortDirection = props.sortDirection;
+const oldSortDirection = props.sortDirection ?? 'desc';
 const filterRowCount = ref(props.totalRows);
 const selected: Ref<Array<any>> = ref([]);
 const selectedAll: any = ref(null);
@@ -410,6 +410,7 @@ const filteredRows = () => {
 
     if (!props.isServerMode) {
         props.columns?.forEach((d) => {
+            
             if (d.filter && ((d.value !== undefined && d.value !== null && d.value !== '') || d.condition === 'is_null' || d.condition == 'is_not_null')) {
                 // string filters
                 if (d.type === 'string') {
@@ -482,27 +483,20 @@ const filteredRows = () => {
                 }
                 // date filters
                 else if (d.type === 'date' && !d.range) {
-                    if (d.value && !d.condition) {
-                        d.condition = 'equal';
-                    }
-
-                    if (d.condition === 'equal') {
-                        rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && cellValue(item, d.field) === d.value;
-                        });
-                    } else if (d.condition === 'not_equal') {
-                        rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && cellValue(item, d.field) !== d.value;
-                        });
-                    } else if (d.condition === 'greater_than') {
-                        rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && dateFormat(cellValue(item, d.field)) > d.value;
-                        });
-                    } else if (d.condition === 'less_than') {
-                        rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && dateFormat(cellValue(item, d.field)) < d.value;
-                        });
-                    }
+                    rows = rows.filter((item) => {
+                        return cellValue(item, d.field) &&  dateFormat(cellValue(item, d.field)) === d.value;
+                    });
+                }
+                // date filters
+                else if (d.type === 'date' && d.range) {
+                    rows = rows.filter((item) => {
+                        const [startValue, endValue] = d.value.split(' - ');
+                        
+                        return cellValue(item, 'date_start') && 
+                            cellValue(item, 'date_end') && 
+                            dateFormat(cellValue(item, 'date_start')) >= dateFormat(startValue) && 
+                            dateFormat(cellValue(item, 'date_end')) <= dateFormat(endValue);
+                    });
                 }
                 // boolean filters
                 else if (d.type === 'bool') {
@@ -545,10 +539,11 @@ const filteredRows = () => {
 
             rows = final;
         }
-
+        
         // sort rows
         var collator = new Intl.Collator('en', {
-            numeric: props.columns.find((col) => col.field == currentSortColumn.value)?.type === 'number',
+            numeric: props.columns.find((col) => col.field == currentSortColumn.value)?.type === undefined || 
+            props.columns.find((col) => col.field == currentSortColumn.value)?.type === 'number',
             sensitivity: 'base',
         });
 
@@ -560,8 +555,8 @@ const filteredRows = () => {
 
             // Si estamos ordenando por el campo "code", hacemos un ordenamiento especial.
             if (currentSortColumn.value === 'code') {
-                const numericA = valA.replace(/[^\d]/g, ''); // Extraer números de la cadena.
-                const numericB = valB.replace(/[^\d]/g, '');
+                const numericA = valA.split('-')[1] ?? valA.split('-')[0];
+                const numericB = valB.split('-')[1] ?? valB.split('-')[0];
                 return (parseInt(numericA) - parseInt(numericB)) * sortOrder;
             }
 

@@ -101,7 +101,7 @@
                             <option v-for="opt in col.options" :key="'opt'+opt" :value="opt">{{ opt }}</option>
                         </select>
                         
-                        <button v-if="col.type != 'bool' && !col.options" type="button" @click.stop="emit('toggleFilterMenu', col)">
+                        <button v-if="col.type != 'date' && (col.type != 'bool' && !col.options)" type="button" @click.stop="emit('toggleFilterMenu', col)">
                             <icon-filter class="bh-w-4" />
                         </button>
 
@@ -153,13 +153,14 @@ const initializeDatePicker = (column: any) => {
             new Litepicker({
                 element: input,
                 singleMode: true,
+                lang: "es-MX",
                 tooltipNumber: (totalDays) => {
                     return totalDays - 1;
                 },
                 setup: (picker) => {
                     picker.on('selected', (startDate, endDate) => {
-                        let date = dayjs(startDate.dateInstance).format(getFormatDate(column));
-                        date += endDate !== undefined && endDate !== null ? " - " + dayjs(endDate.dateInstance).format(getFormatDate(column)) : "";
+                        let date = dayjs(startDate.dateInstance).format("YYYY-MM-DD");
+                        date += endDate !== undefined && endDate !== null ? " - " + dayjs(endDate.dateInstance).format("YYYY-MM-DD") : "";
                         column.value = date;
                         emit('filterChange');
                     });
@@ -191,11 +192,12 @@ const initializeRangePicker = (column: any) => {
             new Litepicker({
                 element: input,
                 singleMode: false,
+                lang: "es-MX",
                 tooltipNumber: (totalDays) => totalDays - 1,
                 setup: (picker) => {
                     picker.on('selected', (startDate, endDate) => {
-                        let date = dayjs(startDate.dateInstance).format(getFormatDate(column));
-                        date += endDate !== undefined && endDate !== null ? " - " + dayjs(endDate.dateInstance).format(getFormatDate(column)) : "";
+                        let date = dayjs(startDate.dateInstance).format("YYYY-MM-DD");
+                        date += endDate !== undefined && endDate !== null ? " - " + dayjs(endDate.dateInstance).format("YYYY-MM-DD") : "";
                         column.value = date;
                         emit('filterChange');
                     });

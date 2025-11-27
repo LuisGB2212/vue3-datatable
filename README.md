@@ -11,19 +11,19 @@ Editado de @bhplugin/vue3-datatable
 #### NPM
 
 ```bash
-npm install @bhplugin/vue3-datatable --save
+npm install @luisgb2212/table-customizable --save
 ```
 
 #### Yarn
 
 ```bash
-yarn add @bhplugin/vue3-datatable
+yarn add @luisgb2212/table-customizable
 ```
 
 #### Bower
 
 ```bash
-bower install @bhplugin/vue3-datatable --save
+bower install @luisgb2212/table-customizable --save
 ```
 
 ## Usage
