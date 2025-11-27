@@ -35,8 +35,8 @@ bower install @luisgb2212/table-customizable --save
 
 <script setup lang="ts">
     import { ref } from "vue";
-    import Vue3Datatable from "@bhplugin/vue3-datatable";
-    import "@bhplugin/vue3-datatable/dist/style.css";
+    import Vue3Datatable from "@luisgb2212/table-customizable";
+    import "@luisgb2212/table-customizable/dist/style.css";
 
     const cols = ref([
       { field: "id", title: "ID", width: "90px", filter: false },

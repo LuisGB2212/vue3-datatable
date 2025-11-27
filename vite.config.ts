@@ -7,9 +7,14 @@ export default defineConfig({
     plugins: [vue()],
     build: {
         lib: {
-            entry: {
-                'vue3-datatable': resolve(__dirname, 'src/components/index.ts'),
-                'vue3-datatable-css': resolve(__dirname, 'src/assets/css/tailwind.css'),
+            entry: resolve(__dirname, 'src/components/index.ts'),
+            name: 'TableCustomizable',
+            formats: ['es', 'cjs', 'umd'],
+            fileName: (format) => {
+                if (format === 'es') return 'vue3-datatable.js';
+                if (format === 'cjs') return 'vue3-datatable.cjs';
+                if (format === 'umd') return 'vue3-datatable.umd.js';
+                return `vue3-datatable.${format}.js`;
             },
         },
         rollupOptions: {
