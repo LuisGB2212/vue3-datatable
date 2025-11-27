@@ -220,7 +220,7 @@ const initializeRangePicker = (column: any) => {
 
 // Ejecuta la inicialización del range picker cuando la columna es de tipo 'date' y tiene un rango
 onMounted(() => {
-    props.all.columns.forEach(col => {
+    props.all.columns.forEach((col: any) => {
         if (col.type === 'date' && (typeof col.range == "boolean" && col.range == true)) {
             initializeRangePicker(col);
         } else if (col.type === 'date') {

@@ -173,15 +173,7 @@
         </div>
     </div>
 </template>
-
-<script setup lang="ts">
-import { computed, onMounted, Ref, ref, useSlots, watch } from 'vue';
-import columnHeader from './column-header.vue';
-import iconCheck from './icon-check.vue';
-import iconLoader from './icon-loader.vue';
-
-const slots = useSlots();
-
+<script lang="ts">
 export interface colDef {
     isUnique?: boolean;
     field?: string;
@@ -205,7 +197,7 @@ export interface colDef {
     filterColumns?: Array<string>;
 }
 
-interface Props {
+export interface Props {
     loading?: boolean;
     isServerMode?: boolean;
     skin?: string;
@@ -245,6 +237,15 @@ interface Props {
     fieldVerify?: string;
     virifyClass?: string;
 }
+
+</script>
+<script setup lang="ts">
+import { computed, onMounted, Ref, ref, useSlots, watch } from 'vue';
+import columnHeader from './column-header.vue';
+import iconCheck from './icon-check.vue';
+import iconLoader from './icon-loader.vue';
+
+const slots = useSlots();
 
 const props = withDefaults(defineProps<Props>(), {
     loading: false,
