@@ -2,19 +2,27 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
+// https://vitejs.dev/config/
 export default defineConfig({
     plugins: [vue()],
     build: {
         lib: {
-            entry: resolve(__dirname, 'src/index.ts'),
-            name: "TableCustomizable",
-            fileName: (format) => `vue3-datatable.${format}.js`,
+            entry: {
+                'vue3-datatable': resolve(__dirname, 'src/components/index.ts'),
+                'vue3-datatable-css': resolve(__dirname, 'src/assets/css/tailwind.css'),
+            },
         },
         rollupOptions: {
-            external: ['vue'],
+            // make sure to externalize deps that shouldn't be bundled
+            // into your library
+            external: ['vue', 'dayjs', 'litepicker'],
             output: {
+                // Provide global variables to use in the UMD build
+                // for externalized deps
                 globals: {
                     vue: 'Vue',
+                    dayjs: 'dayjs',
+                    litepicker: 'litepicker',
                 },
             },
         },
