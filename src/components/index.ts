@@ -1,2 +1,2 @@
-import TableCuztomized from './custom-table.vue';
-export default TableCuztomized;
+import TableCustomized from './custom-table.vue';
+export default TableCustomized;
