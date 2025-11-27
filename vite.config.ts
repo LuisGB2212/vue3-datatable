@@ -7,8 +7,8 @@ export default defineConfig({
     plugins: [vue()],
     build: {
         lib: {
-            entry: resolve(__dirname, 'src/main.ts'),
-            name: 'TableCustomizable',
+            entry: resolve(__dirname, 'src/components/index.ts'),
+            name: 'TableCustomized',
             formats: ['es', 'cjs', 'umd'],
             fileName: (format) => {
                 if (format === 'es') return 'vue3-datatable.js';

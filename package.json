@@ -9,12 +9,12 @@
     ],
     "main": "./dist/vue3-datatable.umd.js",
     "module": "./dist/vue3-datatable.js",
-    "types": "./dist/main.d.ts",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "import": "./dist/vue3-datatable.js",
             "require": "./dist/vue3-datatable.umd.js",
-            "types": "./dist/main.d.ts"
+            "types": "./dist/index.d.ts"
         },
         "./dist/style.css": "./dist/style.css"
     },
@@ -59,8 +59,7 @@
     "scripts": {
         "dev": "vite",
         "clean": "rm -rf dist",
-        "build": "npm run clean && vite build && vue-tsc --emitDeclarationOnly && npm run post-build && npm run tailwind:build",
-        "post-build": "cp dist/components/custom-table.vue.d.ts dist/custom-table.vue.d.ts 2>/dev/null || true",
+        "build": "npm run clean && vite build && vue-tsc --emitDeclarationOnly && npm run tailwind:build",
         "preview": "vite preview",
         "tailwind": "npx tailwindcss -i ./src/assets/css/tailwind.css -o ./dist/style.css --watch",
         "tailwind:build": "npx tailwindcss -i ./src/assets/css/tailwind.css -o ./dist/style.css --minify"

@@ -17,11 +17,16 @@
         "skipLibCheck": true,
         "outDir": "dist",
         "declaration": true,
-        "declarationDir": "dist"
+        "declarationDir": "dist",
+        "rootDir": "src/components"
     },
     "include": [
-        "src/**/*.ts",
-        "src/**/*.vue"
+        "src/components/**/*.ts",
+        "src/components/**/*.vue"
+    ],
+    "exclude": [
+        "src/main.ts",
+        "src/App.vue"
     ],
     "references": [
         {
