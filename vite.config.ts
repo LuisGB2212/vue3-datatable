@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [vue()],
     build: {
         lib: {
-            entry: resolve(__dirname, 'src/components/index.ts'),
+            entry: resolve(__dirname, 'src/main.ts'),
             name: 'TableCustomizable',
             formats: ['es', 'cjs', 'umd'],
             fileName: (format) => {
