@@ -202,6 +202,7 @@ export interface colDef {
     cellClass?: string;
     range?: boolean;
     formatDate?: string;
+    filterColumns?: Array<string>;
 }
 
 interface Props {
@@ -410,7 +411,6 @@ const filteredRows = () => {
 
     if (!props.isServerMode) {
         props.columns?.forEach((d) => {
-            
             if (d.filter && ((d.value !== undefined && d.value !== null && d.value !== '') || d.condition === 'is_null' || d.condition == 'is_not_null')) {
                 // string filters
                 if (d.type === 'string') {
@@ -420,27 +420,33 @@ const filteredRows = () => {
 
                     if (d.condition === 'contain') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field)?.toString().toLowerCase().includes(d.value.toLowerCase());
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field)?.toString().toLowerCase().includes(d.value.toLowerCase());
                         });
                     } else if (d.condition === 'not_contain') {
                         rows = rows.filter((item) => {
-                            return !cellValue(item, d.field)?.toString().toLowerCase().includes(d.value.toLowerCase());
+                            return !filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                && !cellValue(item, d.field)?.toString().toLowerCase().includes(d.value.toLowerCase());
                         });
                     } else if (d.condition === 'equal') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field)?.toString().toLowerCase() === d.value.toLowerCase();
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field)?.toString().toLowerCase() === d.value.toLowerCase();
                         });
                     } else if (d.condition === 'not_equal') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field)?.toString().toLowerCase() !== d.value.toLowerCase();
+                            return !filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                && cellValue(item, d.field)?.toString().toLowerCase() !== d.value.toLowerCase();
                         });
                     } else if (d.condition == 'start_with') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field)?.toString().toLowerCase().indexOf(d.value.toLowerCase()) === 0;
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field)?.toString().toLowerCase().indexOf(d.value.toLowerCase()) === 0;
                         });
                     } else if (d.condition == 'end_with') {
                         rows = rows.filter((item) => {
-                            return (
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || (
                                 cellValue(item, d.field)
                                     ?.toString()
                                     .toLowerCase()
@@ -457,27 +463,33 @@ const filteredRows = () => {
 
                     if (d.condition === 'equal') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) === parseFloat(d.value);
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) === parseFloat(d.value);
                         });
                     } else if (d.condition === 'not_equal') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) !== parseFloat(d.value);
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) !== parseFloat(d.value);
                         });
                     } else if (d.condition === 'greater_than') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) > parseFloat(d.value);
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) > parseFloat(d.value);
                         });
                     } else if (d.condition === 'greater_than_equal') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) >= parseFloat(d.value);
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) >= parseFloat(d.value);
                         });
                     } else if (d.condition === 'less_than') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) < parseFloat(d.value);
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) < parseFloat(d.value);
                         });
                     } else if (d.condition === 'less_than_equal') {
                         rows = rows.filter((item) => {
-                            return cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) <= parseFloat(d.value);
+                            return filteredColumns(d.filterColumns || [], item, d.value.toLowerCase()) 
+                                || cellValue(item, d.field) && parseFloat(cellValue(item, d.field)) <= parseFloat(d.value);
                         });
                     }
                 }
@@ -566,6 +578,12 @@ const filteredRows = () => {
 
     return rows;
 };
+
+const filteredColumns = (columns: Array<string>, item: any, value: string) : boolean => {
+    return columns.some((col) => {
+        return cellValue(item, col)?.toString().toLowerCase().includes(value);
+    });
+}
 
 const filterRows = () => {
     let result: any = [];

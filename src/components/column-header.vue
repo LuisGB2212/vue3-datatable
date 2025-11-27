@@ -131,7 +131,6 @@ import "dayjs/locale/es";
 
 dayjs.locale("es");
 
-
 const selectedAll: any = ref(null);
 
 const props = defineProps(['all', 'currentSortColumn', 'currentSortDirection', 'isOpenFilter', 'isFooter', 'checkAll', 'columnFilterLang']);

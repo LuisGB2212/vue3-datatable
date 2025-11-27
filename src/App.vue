@@ -50,7 +50,7 @@ const cols =
         { field: "status", title: "Estatus", filter: true },
         { field: "code", title: "Código", filter: true },
         { field: "created_at", title: "Creado", filter: true, type: "date", width: "8%", formatDate: "D MMM, YYYY" },
-        { field: "service_name", title: "Servicio", filter: true, width: "20%" },
+        { field: "service_name", title: "Servicio", filter: true, width: "20%", filterColumns: ['customer_name'] },
         { field: "travel_dates", title: "Fechas", filter: true, type: "date", range: true, formatDate: "YYYY-MM-DD" },
         { field: "amount", title: "Tarifas", filter: false, type: "number" },
         { field: "operators", title: "Operadoras", filter: true },

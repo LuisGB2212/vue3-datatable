@@ -1,6 +1,6 @@
 {
     "name": "@luisgb2212/table-customizable",
-    "version": "1.0.8",
+    "version": "1.0.10",
     "description": "Vue3 Datatable - fully customizable & easy to use datatable library",
     "private": false,
     "type": "module",
@@ -58,7 +58,8 @@
     },
     "scripts": {
         "dev": "vite",
-        "build": "vite build && vue-tsc --emitDeclarationOnly && npm run tailwind:build",
+        "clean": "rm -rf dist",
+        "build": "npm run clean && vite build && vue-tsc --emitDeclarationOnly && npm run tailwind:build",
         "preview": "vite preview",
         "tailwind": "npx tailwindcss -i ./src/assets/css/tailwind.css -o ./dist/style.css --watch",
         "tailwind:build": "npx tailwindcss -i ./src/assets/css/tailwind.css -o ./dist/style.css --minify"
